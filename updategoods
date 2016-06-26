@@ -1,0 +1,51 @@
+var express = require('express');
+var router = express();
+var fs = require("fs");
+
+router.put('/products/:id', function (req, res) {
+
+    var item=req.body;
+    if ( typeof (item.barcode) != 'string' ||
+         typeof (item.name)    != 'string' ||
+         typeof (item.unit)    != 'string' ||
+         typeof (item.price)   != 'number') {
+
+         res.status(400).json();
+
+         return;
+    }
+    fs.readFile(goods.json, "utf8", function (err, data) {
+
+        if (data === '' || data === {}) {
+
+            res.status(404).json();
+
+            return;
+        }
+
+        data = JSON.parse(data);
+
+        for (var i = 0; i < data.goods.length; i++) {
+            if (data.goods[i].id.toString() === req.params.id) {
+                var good = {
+                    "id": data.goods[i].id,
+                    "barcode": item.barcode,
+                    "name": item.name,
+                    "unit": item.unit,
+                    "price": item.price
+                };
+                data.items[i] = good;
+            }
+        }
+        if (good != undefined) {
+            fs.writeFile(goods.json, JSON.stringify(data), function (err) {
+            });
+            res.status(200).json(good);
+        }
+        else {
+            res.status(404).json();
+        }
+    });
+});
+
+module.exports = router;
